@@ -14,8 +14,7 @@ __pycache__/
 *.swp
 *~
 
-# Static files (if managed outside of Django's collectstatic)
-/static/
+
 
 # Media files (user-uploaded files)
 /media/
