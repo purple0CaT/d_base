@@ -1,0 +1,37 @@
+# General
+*.pyc
+__pycache__/
+*.sqlite3
+
+# Environment
+.env
+
+# IDE/Editor-specific
+.vscode/
+.idea/
+*.pyc
+*.swo
+*.swp
+*~
+
+# Static files (if managed outside of Django's collectstatic)
+/static/
+
+# Media files (user-uploaded files)
+/media/
+
+# Logs
+/logs/
+
+# Compiled Python files
+*.pyc
+*.pyo
+*.pyd
+
+# Dependency directories
+venv/
+env/
+env3/
+*.egg-info/
+dist/
+build/
