@@ -74,7 +74,7 @@ def home(request):
     else:
         # get all the data from the database table Todo and order it by the created_at field
         context['todos'] = Todo.objects.order_by('created_at')
-        return render(request,homePage)
+        return render(request, homePage, context)
 
 def about(request):
     return render(request,'about.html')
