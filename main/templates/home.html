@@ -32,6 +32,7 @@
   {% endif %} {% if error %}
   <p style="color: red">{{ error }}</p>
   {% endif %}
+
   <form method="POST">
     {% csrf_token %}
     <input
@@ -50,19 +51,22 @@
     const todo_id = Number(e.getAttribute("data-todo-id"));
     if (typeof todo_id !== "number") return;
 
+    const dto = {
+      todo_id: todo_id,
+    };
+
     fetch("/", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "X-CSRFToken": "{{ csrf_token }}",
       },
-      body: JSON.stringify({
-        todo_id: todo_id,
-      }),
+      body: JSON.stringify(dto),
     }).then((res) => {
       window.location.reload();
     });
   }
+
   function deleteList(e) {
     const todo_id = Number(e.getAttribute("data-todo-id"));
     if (typeof todo_id !== "number") return;

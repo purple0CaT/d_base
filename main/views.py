@@ -19,6 +19,9 @@ def home(request):
         # check if the form is valid
         if form.is_valid():
             # save the data to database, you need to declere the form with Meta tag, check the forms.py
+            #       feedback = form.save(commit=False)
+            #       feedback.ticket = ticket
+            #       feedback.save()
             form.save()
             # redirect to the home page so it can read the data from the database and display it
             return redirect('/')
@@ -56,14 +59,14 @@ def home(request):
         if(todo):
             todo.delete()
             context['todos'] = Todo.objects.order_by('created_at')
-            return render(request,homePage,context)    # Read
+            return render(request,homePage,context)
         # return error if the object doesn't exist
         else:
             context['error'] = 'Invalid id'
             return render(request,homePage,context)
-    # Read the whole list
+    # Read the whole list - Get request
     else:
-        # get all the data from the database and order it by the created_at field
+        # get all the data from the database table Todo and order it by the created_at field
         context['todos'] = Todo.objects.order_by('created_at')
         return render(request,homePage,context)
 
