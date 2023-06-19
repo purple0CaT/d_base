@@ -9,9 +9,15 @@ from django.http import HttpResponse
 
 def home(request):
     homePage = 'home.html'
+    # get the csrf token from the request if it's exist else return None
+    if('CSRF_COOKIE' in request.META and request.META['CSRF_COOKIE']):
+        crsf_token = request.META['CSRF_COOKIE']
+    else:
+        crsf_token = None
+
     # Declare context to return the token each time, to secure the form from CSRF attacks
     # Also return the todos list and error if there is any
-    context = {'csrf_token': request.META['CSRF_COOKIE'], 'todos': [], 'error': None}
+    context = {'csrf_token': crsf_token, 'todos': [], 'error': None}
     # Create method
     if(request.method == 'POST'):
         # extract the data from the form
@@ -68,7 +74,7 @@ def home(request):
     else:
         # get all the data from the database table Todo and order it by the created_at field
         context['todos'] = Todo.objects.order_by('created_at')
-        return render(request,homePage,context)
+        return render(request,homePage)
 
 def about(request):
     return render(request,'about.html')
