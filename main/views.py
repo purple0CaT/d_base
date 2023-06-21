@@ -34,10 +34,10 @@ def home(request):
     # Catch any error and return it
     except Exception as e:
         print(e)
-        context['error'] = 'Invalid request'
+        context['error'] = 'Invalid method'
         return render(request,home_page,context)
 
-def handleUpdateDelete(request, method_type):
+def handle_update_delete(request, method_type):
     # Declare context to return the todos list and error if there is any
     context = {'todos': [], 'error': None}
     home_page = 'home.html'
@@ -68,7 +68,7 @@ def handleUpdateDelete(request, method_type):
                     todo.delete()
                     return redirect('/')
                 else:
-                    context['error'] = 'Invalid request'
+                    context['error'] = 'Invalid method!'
                     return render(request,home_page,context)
         else:
             context['error'] = 'Invalid request'

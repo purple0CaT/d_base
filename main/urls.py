@@ -3,6 +3,6 @@ from . import views
 
 urlpatterns = [
     path('', views.home),
-    path('todo/<str:method_type>', views.handleUpdateDelete),
+    path('todo/<str:method_type>', views.handle_update_delete),
     path('about/', views.about),
 ]
