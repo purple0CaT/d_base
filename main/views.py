@@ -3,20 +3,16 @@ from .models import Todo
 from .forms import TodoForm
 import json
 from django.http import HttpResponse
-from .utils import extract_crsf
 
 
 # Create your views here.
 
 def home(request):
-    # Declare context to return the token each time, to secure the form from CSRF attacks
-    # Also return the todos list and error if there is any
-    context = {'csrf_token': None, 'todos': [], 'error': None}
+    # Declare context to return the the todos list and error if there is any
+    context = {'todos': [], 'error': None}
     home_page = 'home.html'
     # Wrapping the code with try and except to catch any error
     try:
-        # get the csrf token from the request
-        context['crsf_token'] = extract_crsf(request)
         # Create method
         if(request.method == 'POST'):
             # extract the data from the form
@@ -42,14 +38,11 @@ def home(request):
         return render(request,home_page,context)
 
 def handleUpdateDelete(request, method_type):
-    # Declare context to return the token each time, to secure the form from CSRF attacks
-    # Also return the todos list and error if there is any
-    context = {'csrf_token': None, 'todos': [], 'error': None}
+    # Declare context to return the todos list and error if there is any
+    context = {'todos': [], 'error': None}
     home_page = 'home.html'
     # Wrapping the code with try and except to catch any error
     try:
-        # get the csrf token from the request if it's exist else return None
-        context['crsf_token'] = extract_crsf(request)
         # Declare context object that will return the token (to secure the form from CSRF attacks) and
         # also will return aditional information that we will render in html (todos list, and errors if there is any)
         if(request.method == 'POST'):
@@ -59,14 +52,14 @@ def handleUpdateDelete(request, method_type):
                 todo = Todo.objects.get(id=todo_id)
                 # Update method
                 if(method_type == 'update'):
-                    # check if the action is none, if it is none then change it to done, else change it to none
+                    # check if the action is none, if it's none then change it to done, else change it to none
                     if todo.action == 'none':
                         todo.action = 'done'
                     else:
                         todo.action = 'none'
                     # save the changes to the database
                     todo.save()
-                    # return updated data
+                    # redirect to the specific url
                     return redirect('/')
 
                 # Delete Method
