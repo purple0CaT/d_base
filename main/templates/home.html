@@ -9,21 +9,23 @@
   <ul>
     {% for todo in todos %}
     <div class="list">
-      <button
-        class="todo-btn"
-        data-todo-id="{{todo.id}}"
-        onclick="updateTodo(this)"
-      >
-        {% if todo.action == 'done' %}❌{% endif %}
-      </button>
+      <form method="POST" action="/todo/update">
+        {% csrf_token %}
+        <input type="hidden" name="todo_id" value="{{todo.id}}" />
+        <button class="todo-btn" type="submit">
+          {% if todo.action == 'done' %}❌{% endif %}
+        </button>
+      </form>
       <li>{{ todo.name }}</li>
-      <button
-        class="delete-btn"
-        data-todo-id="{{todo.id}}"
-        onclick="deleteList(this)"
-      >
-        🗑️
-      </button>
+      <form method="POST" action="/todo/delete" style="margin-left: auto">
+        {% csrf_token %}
+        <input type="hidden" name="todo_id" value="{{todo.id}}" />
+        <button
+          class="delete-btn"
+          type="submit">
+          🗑️
+        </button>
+      </form>
     </div>
     {% endfor %}
   </ul>
@@ -33,7 +35,7 @@
   <p style="color: red">{{ error }}</p>
   {% endif %}
 
-  <form method="POST">
+  <form method="POST" class="post-form">
     {% csrf_token %}
     <input
       type="text"
@@ -42,49 +44,11 @@
       placeholder="Add a todo"
       class="input-style"
     />
-    <button type="submit" class="input-style">X</button>
+    <button type="submit" class="input-style">🔀</button>
   </form>
 </section>
 
-<script>
-  function updateTodo(e) {
-    const todo_id = Number(e.getAttribute("data-todo-id"));
-    if (typeof todo_id !== "number") return;
-
-    const dto = {
-      todo_id: todo_id,
-    };
-
-    fetch("/", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{ csrf_token }}",
-      },
-      body: JSON.stringify(dto),
-    }).then((res) => {
-      window.location.reload();
-    });
-  }
-
-  function deleteList(e) {
-    const todo_id = Number(e.getAttribute("data-todo-id"));
-    if (typeof todo_id !== "number") return;
-
-    fetch("/", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{ csrf_token }}",
-      },
-      body: JSON.stringify({
-        todo_id: todo_id,
-      }),
-    }).then((res) => {
-      window.location.reload();
-    });
-  }
-</script>
+<script></script>
 <style>
   .list {
     display: flex;
@@ -110,7 +74,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: auto;
     border-radius: 5px;
     border: 0px;
     width: 20px;
@@ -147,7 +110,7 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(128, 128, 128, 0.522);
   }
-  form {
+  .post-form {
     width: 100%;
     margin-top: 10px;
     display: flex;
@@ -155,13 +118,13 @@
     align-items: center;
     gap: 10px;
   }
-  form button {
+  .post-form button {
     background-color: wheat;
     cursor: pointer;
     transition: 0.15s;
     width: 40px;
   }
-  form button:hover {
+  .post-form button:hover {
     box-shadow: 0 0 5px grey;
   }
 </style>

@@ -3,6 +3,7 @@ from .models import Todo
 from .forms import TodoForm
 import json
 from django.http import HttpResponse
+from .utils import extract_crsf
 
 
 # Create your views here.
@@ -34,47 +35,56 @@ def home(request):
         else:
             context['error'] = 'Invalid form'
             return render(request,homePage,context)
-    # Update method
-    elif(request.method == 'PUT'):
-        # extract the data from the request body
-        json_data = json.loads(request.body)
-        # get the specific todo object from the database by his id (searching by id)
-        todo = Todo.objects.get(id=json_data['todo_id'])
-        if(todo):
-            # check if the action is none, if it is none then change it to done, else change it to none
-            if todo.action == 'none':
-                todo.action = 'done'
-            else:
-                todo.action = 'none'
-            # save the changes to the database
-            todo.save()
-            # return updated data
-            context['todos'] = Todo.objects.order_by('created_at')
-            return render(request,homePage,context)
-        # return error if the object doesn't exist
-        else:
-            context['error'] = 'Invalid id'
-            return render(request,homePage,context)
-    # Delete Method
-    elif(request.method == 'DELETE'):
-        # extract the data from the request body
-        json_data = json.loads(request.body)
-        # get the specific todo object from the database by his id (searching by id)
-        todo = Todo.objects.get(id=json_data['todo_id'])
-        # delete the object from the database if it's exist
-        if(todo):
-            todo.delete()
-            context['todos'] = Todo.objects.order_by('created_at')
-            return render(request,homePage,context)
-        # return error if the object doesn't exist
-        else:
-            context['error'] = 'Invalid id'
-            return render(request,homePage,context)
     # Read the whole list - Get request
     else:
         # get all the data from the database table Todo and order it by the created_at field
         context['todos'] = Todo.objects.order_by('created_at')
         return render(request, homePage, context)
+
+def handleUpdateDelete(request, method_type):
+    homePage = 'home.html'
+    # Wrapping the code with try and except to catch any error
+    try:
+        # get the csrf token from the request if it's exist else return None
+        crsf_token = extract_crsf(request)
+
+        # Declare context object that will return the token (to secure the form from CSRF attacks) and
+        # also will return aditional information that we will render in html (todos list, and errors if there is any)
+        context = {'csrf_token': crsf_token, 'todos': [], 'error': None}
+        if(request.method == 'POST'):
+                # extract the data from the form
+                todo_id = request.POST.get('todo_id')
+                # get the specific todo object from the database by his id (searching by id)
+                todo = Todo.objects.get(id=todo_id)
+                # Update method
+                if(method_type == 'update'):
+                    # check if the action is none, if it is none then change it to done, else change it to none
+                    if todo.action == 'none':
+                        todo.action = 'done'
+                    else:
+                        todo.action = 'none'
+                    # save the changes to the database
+                    todo.save()
+                    # return updated data
+                    return redirect('/')
+
+                # Delete Method
+                elif(method_type == 'delete'):
+                    # delete the object from the database
+                    todo.delete()
+                    return redirect('/')
+                else:
+                    context['error'] = 'Invalid request'
+                    return render(request,homePage,context)
+        else:
+            context['error'] = 'Invalid request'
+            return render(request,homePage,context)
+    # Catch any error and return it
+    except Exception as e:
+        print(e)
+        context['error'] = 'Invalid request'
+        return render(request,homePage,context)
+
 
 def about(request):
     return render(request,'about.html')
