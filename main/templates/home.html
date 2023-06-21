@@ -70,6 +70,9 @@
     border: 1px solid grey;
     box-shadow: 0 0 5px grey;
   }
+  .list .todo-btn:hover {
+    box-shadow: 0 0 15px darkcyan;
+  }
   .list .delete-btn {
     display: flex;
     justify-content: center;
@@ -82,9 +85,10 @@
     font-size: 10px;
     cursor: pointer;
     transition: 0.15s;
+    box-shadow: 0 0 5px darkgrey;
   }
   .list .delete-btn:hover {
-    box-shadow: 0 0 5px tomato;
+    box-shadow: 0 0 15px tomato;
   }
   .wrapper-section {
     max-width: 300px;
@@ -105,7 +109,7 @@
     flex-direction: column;
     justify-content: flex-start;
     gap: 10px;
-    background-color: azure;
+    background-color: whitesmoke;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(128, 128, 128, 0.522);
@@ -119,13 +123,15 @@
     gap: 10px;
   }
   .post-form button {
-    background-color: wheat;
+    background-color: antiquewhite;
+    border:unset;
     cursor: pointer;
     transition: 0.15s;
     width: 40px;
+    box-shadow: 0 0 5px darkgrey;
   }
   .post-form button:hover {
-    box-shadow: 0 0 5px grey;
+    box-shadow: 0 0 15px grey;
   }
 </style>
 {% endblock %}
