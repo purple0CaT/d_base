@@ -9,14 +9,14 @@ from .utils import extract_crsf
 # Create your views here.
 
 def home(request):
+    # Declare context to return the token each time, to secure the form from CSRF attacks
+    # Also return the todos list and error if there is any
+    context = {'csrf_token': None, 'todos': [], 'error': None}
+    home_page = 'home.html'
     # Wrapping the code with try and except to catch any error
     try:
-        home_page = 'home.html'
-        # get the csrf token from the request if it's exist else return None
-        crsf_token = extract_crsf(request)
-        # Declare context to return the token each time, to secure the form from CSRF attacks
-        # Also return the todos list and error if there is any
-        context = {'csrf_token': crsf_token, 'todos': [], 'error': None}
+        # get the csrf token from the request
+        context['crsf_token'] = extract_crsf(request)
         # Create method
         if(request.method == 'POST'):
             # extract the data from the form
@@ -42,14 +42,16 @@ def home(request):
         return render(request,home_page,context)
 
 def handleUpdateDelete(request, method_type):
+    # Declare context to return the token each time, to secure the form from CSRF attacks
+    # Also return the todos list and error if there is any
+    context = {'csrf_token': None, 'todos': [], 'error': None}
+    home_page = 'home.html'
     # Wrapping the code with try and except to catch any error
     try:
-        home_page = 'home.html'
         # get the csrf token from the request if it's exist else return None
-        crsf_token = extract_crsf(request)
+        context['crsf_token'] = extract_crsf(request)
         # Declare context object that will return the token (to secure the form from CSRF attacks) and
         # also will return aditional information that we will render in html (todos list, and errors if there is any)
-        context = {'csrf_token': crsf_token, 'todos': [], 'error': None}
         if(request.method == 'POST'):
                 # extract the data from the form
                 todo_id = request.POST.get('todo_id')
