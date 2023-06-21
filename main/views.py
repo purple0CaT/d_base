@@ -9,45 +9,44 @@ from .utils import extract_crsf
 # Create your views here.
 
 def home(request):
-    homePage = 'home.html'
-    # get the csrf token from the request if it's exist else return None
-    if('CSRF_COOKIE' in request.META and request.META['CSRF_COOKIE']):
-        crsf_token = request.META['CSRF_COOKIE']
-    else:
-        crsf_token = None
-
-    # Declare context to return the token each time, to secure the form from CSRF attacks
-    # Also return the todos list and error if there is any
-    context = {'csrf_token': crsf_token, 'todos': [], 'error': None}
-    # Create method
-    if(request.method == 'POST'):
-        # extract the data from the form
-        form = TodoForm(request.POST)
-        # check if the form is valid
-        if form.is_valid():
-            # save the data to database, you need to declere the form with Meta tag, check the forms.py
-            #       feedback = form.save(commit=False)
-            #       feedback.ticket = ticket
-            #       feedback.save()
-            form.save()
-            # redirect to the home page so it can read the data from the database and display it
-            return redirect('/')
-        else:
-            context['error'] = 'Invalid form'
-            return render(request,homePage,context)
-    # Read the whole list - Get request
-    else:
-        # get all the data from the database table Todo and order it by the created_at field
-        context['todos'] = Todo.objects.order_by('created_at')
-        return render(request, homePage, context)
-
-def handleUpdateDelete(request, method_type):
-    homePage = 'home.html'
     # Wrapping the code with try and except to catch any error
     try:
+        home_page = 'home.html'
         # get the csrf token from the request if it's exist else return None
         crsf_token = extract_crsf(request)
+        # Declare context to return the token each time, to secure the form from CSRF attacks
+        # Also return the todos list and error if there is any
+        context = {'csrf_token': crsf_token, 'todos': [], 'error': None}
+        # Create method
+        if(request.method == 'POST'):
+            # extract the data from the form
+            form = TodoForm(request.POST)
+            # check if the form is valid
+            if form.is_valid():
+                # save the data to database, you need to declere the form with Meta tag, check the forms.py
+                form.save()
+                # redirect to the home page so it can read the data from the database and display it
+                return redirect('/')
+            else:
+                context['error'] = 'Invalid form'
+                return render(request,home_page,context)
+        # Read the whole list - Get request
+        else:
+            # get all the data from the database table Todo and order it by the created_at field
+            context['todos'] = Todo.objects.order_by('created_at')
+            return render(request, home_page, context)
+    # Catch any error and return it
+    except Exception as e:
+        print(e)
+        context['error'] = 'Invalid request'
+        return render(request,home_page,context)
 
+def handleUpdateDelete(request, method_type):
+    # Wrapping the code with try and except to catch any error
+    try:
+        home_page = 'home.html'
+        # get the csrf token from the request if it's exist else return None
+        crsf_token = extract_crsf(request)
         # Declare context object that will return the token (to secure the form from CSRF attacks) and
         # also will return aditional information that we will render in html (todos list, and errors if there is any)
         context = {'csrf_token': crsf_token, 'todos': [], 'error': None}
@@ -75,15 +74,15 @@ def handleUpdateDelete(request, method_type):
                     return redirect('/')
                 else:
                     context['error'] = 'Invalid request'
-                    return render(request,homePage,context)
+                    return render(request,home_page,context)
         else:
             context['error'] = 'Invalid request'
-            return render(request,homePage,context)
+            return render(request,home_page,context)
     # Catch any error and return it
     except Exception as e:
         print(e)
         context['error'] = 'Invalid request'
-        return render(request,homePage,context)
+        return render(request,home_page,context)
 
 
 def about(request):
