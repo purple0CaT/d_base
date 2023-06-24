@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from .utils import check_if_admin
 
 # Create your views here.
 
@@ -20,12 +21,9 @@ def login_view(request):
 
 @login_required(login_url="login/")
 def dashboard_view(request):
-    if not request.user.is_superuser:
-        logout(request)
-        return redirect('/custom_admin/login')
-    else:
+    check_if_admin(request)
 
-        return render(request,'dash.html')
+    return render(request,'dash.html')
 
 
 
