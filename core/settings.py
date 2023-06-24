@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main'
+    'main',
+    'custom_admin'
 ]
 
 MIDDLEWARE = [
@@ -107,6 +108,11 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# AUTHENTICATION_BACKENDS = [
+#     # ... other authentication backends ...
+#     'custom_admin.backends.CustomAdminBackend',
+# ]
 
 
 # Internationalization
