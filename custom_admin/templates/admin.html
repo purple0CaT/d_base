@@ -18,10 +18,12 @@
           </a>
         </section>
         <section>
+            {% if user.is_authenticated %}
            <form method="post" action="{% url 'logout' %}">
                {% csrf_token %}
                <button type="submit">Log Out</button>
            </form>
+           {% endif %}
         </section>
       </header>
       <main class="content">{% block content %}{% endblock %}</main>

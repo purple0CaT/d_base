@@ -9,7 +9,7 @@ def login_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        if user.is_superuser:
+        if user and user.is_superuser:
             login(request, user)
             return redirect('/custom_admin/')
         else:
@@ -24,7 +24,7 @@ def dashboard_view(request):
         logout(request)
         return redirect('/custom_admin/login')
     else:
-        
+
         return render(request,'dash.html')
 
 
