@@ -3,6 +3,16 @@
 {% block content %}
 
 <h1>dashboard</h1>
+<form method="GET" action="{% url 'raw_query'%}">
+    {% csrf_token %}
+    <button>Get Raw Data</button>
+</form>
+
+<ul>
+    {% for todo in todos %}
+    <li>{{todo.name}}</li>
+    {% endfor %}
+</ul>
 
 
 {% endblock %}
